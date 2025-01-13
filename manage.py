@@ -6,7 +6,7 @@ import sys
 
 def main():
     """Run administrative tasks."""
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'bigium_social_publishing_platform.settings')
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'bigium_social_publishing_platform.settings')  # 確保替換 'jedblog.settings' 為你的實際設定模組名稱
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
@@ -15,6 +15,12 @@ def main():
             "available on your PYTHONPATH environment variable? Did you "
             "forget to activate a virtual environment?"
         ) from exc
+
+    # 如果沒有提供任何參數，默認執行 runserver
+    if len(sys.argv) == 1:
+        sys.argv.append('runserver')
+        sys.argv.append('localhost:8000')  # 默認地址和端口，可以根據需要調整
+
     execute_from_command_line(sys.argv)
 
 
