@@ -15,6 +15,12 @@ def main():
             "available on your PYTHONPATH environment variable? Did you "
             "forget to activate a virtual environment?"
         ) from exc
+
+    # If there's no parameter, then CMD "runserver"
+    if len(sys.argv) == 1:
+        sys.argv.append('runserver')
+        sys.argv.append('localhost:8000')  # Default address and port
+
     execute_from_command_line(sys.argv)
 
 
