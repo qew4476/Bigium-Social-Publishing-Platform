@@ -6,7 +6,7 @@ import sys
 
 def main():
     """Run administrative tasks."""
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'bigium_social_publishing_platform.settings')  # 確保替換 'jedblog.settings' 為你的實際設定模組名稱
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'bigium_social_publishing_platform.settings')
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
