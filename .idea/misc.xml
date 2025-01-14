@@ -3,5 +3,8 @@
   <component name="Black">
     <option name="sdkName" value="Poetry (Bigium-Social-Publishing-Platform)" />
   </component>
-  <component name="ProjectRootManager" version="2" project-jdk-name="Poetry (Bigium-Social-Publishing-Platform)" project-jdk-type="Python SDK" />
+  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.11 (Bigium-Social-Publishing-Platform2)" project-jdk-type="Python SDK" />
+  <component name="PyCharmProfessionalAdvertiser">
+    <option name="shown" value="true" />
+  </component>
 </project>

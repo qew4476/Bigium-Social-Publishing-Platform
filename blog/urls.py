@@ -1,5 +1,5 @@
 """
-URL configuration for bigium_social_publishing_platform project.
+URL configuration for blog project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/5.1/topics/http/urls/
@@ -18,7 +18,6 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('',include("bigium_app.urls")),
-    path('auth/', include("bigium_auth_app.urls"))
+    path('',include("blog_app.urls")),
+    path('auth/', include("auth.urls"))
 ]

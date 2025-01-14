@@ -1,31 +1,74 @@
 {% extends 'base.html' %}
 {% block title %}Home Page{% endblock %}
 {% block head %}
-    <link rel="stylesheet" href="{% static "css/base.css" %}">
+<link rel="stylesheet" href="{% static 'css/base.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
 {% endblock %}
 {% block body %}
 <main class="container bg-white p-3 rounded">
-    <h1>Article List</h1>
-    <div class="row row-cols-1 row-gap-4">
-        <div class="col">
-            <div class="card">
-                <div class="card-header">
-                    <a href="#">Article Title</a>
-                </div>
-                <div class="card-body" style="height: 100px;">
-                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                </div>
-                <div class="card-footer text-body-secondary d-flex justify-content-between">
-                    <div>
-                        <img src="{% static 'image/avatar.png' %}" class="rounded-circle" width="30" height="30" alt="">
-                        Author
+    <div class="row">
+        <!-- 主內容區域 -->
+        <div class="col-md-8">
+            <div class="row row-cols-1 row-gap-4">
+                <div class="col">
+                    <div class="card" style="height: 200px;">
+                        <div class="card-body d-flex align-items-start">
+                            <!-- 文字內容區域 -->
+                            <div class="flex-grow-1 me-3 overflow-hidden">
+                                <h5 class="card-title text-truncate">
+                                    <strong>A Very Long Article Title That Should Be Truncated</strong>
+                                </h5>
+                                <p class="card-text text-truncate">
+                                    This is a very long summary text that will be truncated to fit within the card.
+                                </p>
+                            </div>
+                            <!-- 圖片預覽 -->
+                            <img src="{% static 'image/article-preview.jpg' %}" class="rounded" alt="Article Preview"
+                                 style="width: 280px; height: auto;">
+                        </div>
+                        <div class="card-footer text-body-secondary d-flex justify-content-between align-items-center">
+                            <!-- 作者資訊 -->
+                            <div class="d-flex align-items-center">
+                                <img src="{% static 'image/avatar.png' %}" class="rounded-circle me-2" width="30"
+                                     height="30" alt="">
+                                Author
+                            </div>
+                            <!-- 標籤與時間 -->
+                            <div class="d-flex align-items-center">
+            <span class="badge bg-primary me-2">
+                <i class="fas fa-tag me-1"></i> Primary
+            </span>
+                                <div>Mar 21, 2023</div>
+                            </div>
+                        </div>
                     </div>
-                    <div>Mar 21, 2023</div>
+
+
                 </div>
+
             </div>
         </div>
 
+        <!-- 側邊欄 -->
+        <aside class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    Staff Picks
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <a href="#">Top Article 1</a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="#">Top Article 2</a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="#">Top Article 3</a>
+                    </li>
+                </ul>
+            </div>
+        </aside>
     </div>
 </main>
 {% endblock %}
