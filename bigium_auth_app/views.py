@@ -4,6 +4,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 from django.shortcuts import render
 from django.http import JsonResponse
+from django.core.mail import send_mail
 
 
 # Create your views here.
@@ -29,7 +30,8 @@ def send_email_captcha(request):
 
         # send the captcha to the email
         captcha = "".join(random.sample(string.digits,4)) #Sampling will get:['2','3','4','8'], so it needs to be joined
-        return JsonResponse({"msg":captcha},status=200)
+        send_mail("Bigium: Captcha Verification Code",f"Your captcha:{captcha}",recipient_list=[email],from_email=None) #Default from_email has been set up
+        return JsonResponse({"msg":"Captcha has been sent successfully."}, status=200)
 # 2.
 # 3. POST 發送驗證碼 (設定env檔)
 # 4. 寄存到DB
