@@ -1,4 +1,7 @@
 from django.urls import path
 from . import views
-urlpatterns = [path('login/',views.login, name="login"),
-               path('register/', views.register, name="register")]
+
+urlpatterns = [path('login/', views.login, name="login"),
+               path('register/', views.register, name="register"),
+               path('captcha/', views.captcha_verification, name="captcha_vericiation")
+               ]
