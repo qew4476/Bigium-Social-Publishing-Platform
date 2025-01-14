@@ -9,8 +9,11 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
-
+import os
 from pathlib import Path
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -78,11 +81,11 @@ WSGI_APPLICATION = 'bigium_social_publishing_platform.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': "bigium_db",
-        "USER": "postgres",
-        "PASSWORD":"zx985632",
-        "HOST": "127.0.0.1",
-        "PORT":"5432"
+        "NAME": os.getenv("db_NAME"),
+        "USER": os.getenv("db_USER"),
+        "PASSWORD": os.getenv("db_PASSWORD"),
+        "HOST": os.getenv("db_HOST"),
+        "PORT": os.getenv("db_PORT"),
 
     }
 }

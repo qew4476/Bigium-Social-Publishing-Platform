@@ -10,8 +10,7 @@ def register(request):
 def captcha_verification(request):
     pass
 
-#1. 建db
-#2. gmail 開啟SMTP
-#3. POST 發送驗證碼
+#2.
+#3. POST 發送驗證碼 (設定env檔)
 #4. 寄存到DB
 #5.
