@@ -2,6 +2,8 @@ from django.shortcuts import render,reverse
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
 #reverse_lazy: It is useful for when you need to use a URL reversal before your project’s URLConf is loaded.
+#Or we can just "/url"
+#Or LOGIN_URL = '/auth/login' in setting.py
 
 # Create your views here.
 def index(request):
