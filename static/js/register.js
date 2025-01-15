@@ -4,7 +4,7 @@ $(function () {
             let $this = $(this);
             let email = $("input[name='email']").val();
             if (!email) {
-                alert("Please input your email");
+                alert("ssss");
             } else {
                 // disable the button
                 $this.off('click');
@@ -15,7 +15,6 @@ $(function () {
                     type: 'POST',
                     data: {email: email},  // Data to be sent in the request
                     success: function (response) {
-                        alert("Please input your email");
 
                         console.log("Response from server:", response);
                     },
