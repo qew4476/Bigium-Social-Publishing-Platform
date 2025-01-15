@@ -1,0 +1,72 @@
+/* 設定標題樣式 */
+h1, h2, h3 {
+    font-family: 'Arial', sans-serif;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+/* 設定段落樣式 */
+p {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #555;
+}
+
+/* 設定程式碼區塊的樣式 */
+pre {
+    background-color: #f4f4f4;
+    padding: 1rem;
+    border-radius: 8px;
+    overflow-x: auto;
+}
+
+/* 設定表格樣式 */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1.5rem;
+}
+
+table th, table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+table th {
+    background-color: #f8f8f8;
+}
+
+/* 設定區塊引用的樣式 */
+blockquote {
+    padding: 1rem;
+    background-color: #f9f9f9;
+    border-left: 5px solid #ccc;
+    margin: 1rem 0;
+}
+
+/* 設定清單樣式 */
+ul, ol {
+    margin: 1rem 0;
+    padding-left: 2rem;
+}
+
+ul li, ol li {
+    margin-bottom: 0.5rem;
+}
+
+/* 設定超連結樣式 */
+a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* 設定水平分隔線的樣式 */
+hr {
+    border: 3px solid #ddd;
+    margin: 2rem 0;
+}

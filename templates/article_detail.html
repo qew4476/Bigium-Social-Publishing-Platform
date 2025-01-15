@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ article.title }}{% endblock %}
+
+{% block body %}
+<head>
+    <link rel="stylesheet" href="{% static 'css/markdown.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism.css" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+</head>
+
+<main class="container bg-white p-3 rounded" style="display: flex;">
+    <div class="sidebar"
+         style="position: fixed; top: 100px; left: 20px; width: 250px; z-index: 10; background-color: #f8f9fa; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-left: 120px;">
+        <h3>Categories</h3>
+        <div id="toc" style="padding: 10px;">
+            {{ toc_html|safe }}
+        </div>
+    </div>
+
+
+    <!-- 文章內容區 -->
+    <div style="margin-left: 280px; width: calc(100% - 280px);">
+        <h1 class="display-4">{{ article.title }}</h1>
+        <p class="lead">
+            <strong>Author:</strong> {{ article.author }}. {{ article.created_at|date:"M d, Y" }}
+        </p>
+
+        <!--        <div class="my-4">-->
+        <!--            <img src="{{ article.image.url }}" alt="{{ article.title }}" class="img-fluid rounded">-->
+        <!--        </div>-->
+
+        <div class="mt-4">
+            <!-- 渲染 Markdown 轉換後的 HTML -->
+            {{ article_content_html|safe }}
+        </div>
+    </div>
+</main>
+
+
+{% endblock %}
