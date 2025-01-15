@@ -2,19 +2,45 @@ import random
 import string
 
 from django.contrib.auth.models import User
+from django.contrib.auth import login
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
-from django.shortcuts import render, redirect,reverse
+from django.shortcuts import render, redirect, reverse
 from django.http import JsonResponse
 from django.core.mail import send_mail
 from django.views.decorators.http import require_http_methods
 from .models import CaptchaModel
-from .forms import RegisterForm
+from .forms import RegisterForm, LoginForm
 
 
-# Create your views here.
-def login(request):
-    return render(request, 'login.html')
+@require_http_methods(['GET', 'POST'])
+def login_form(request):
+    """The login Page(html) and the login action"""
+    if request.method == 'GET':
+        return render(request, 'login.html')
+    else:  # POST
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data.get("email")
+            password = form.cleaned_data.get("password")
+            remember = form.cleaned_data.get("remember")
+            user = User.objects.filter(email=email).first()
+            if user and user.check_password(password):
+                # Login this user
+                login(request, user)
+
+                # verify if the user want to be remembered
+                # default: the session will be remembered
+                # so it only need to be processed when the user don't want to be remembered.
+                if not remember:
+                    request.session.set_expiry(0)
+                return redirect('/')  # to home page
+            else:
+                form.add_error('email', 'Email or password error!')
+                return render(request, "login.html", context={"form": form})
+        else:
+            form.add_error('email', 'Email or password error!')
+            return render(request, "login.html", context={"form": form})
 
 
 @require_http_methods(['GET', 'POST'])
@@ -31,7 +57,8 @@ def register(request):
             return redirect(reverse('bigium_auth_app:login'))
         else:
             print(form.errors)
-            return render(request,'register.html',{'form':form})
+            return render(request, 'register.html', {'form': form})
+
 
 def send_email_captcha(request):
     if request.method == 'POST':

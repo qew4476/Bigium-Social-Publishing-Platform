@@ -3,29 +3,40 @@
 {% block title %}Login{% endblock %}
 
 {% block body %}
-	<main class="container bg-white p-3 rounded">
-    <div style="max-width: 330px;" class="m-auto">
-        <h1>Login</h1>
-        <form action="" method="POST">
-            <div class="mb-3">
-                <label>Email</label>
-                <input type="email" name="email" class="form-control" placeholder="email">
-            </div>
-            <div class="mb-3">
-                <label>Password</label>
-                <input type="password" name="password" class="form-control" placeholder="password">
-            </div>
-            <div class="form-check mb-3">
-                <input class="form-check-input" type="checkbox" name="remember" value="1" id="flexCheckDefault">
-                <label class="form-check-label" for="flexCheckDefault">
-                    Remebmer me
-                </label>
-            </div>
-            <div class="mb-3">
-                <button class="btn btn-primary w-100">Sign in</button>
-            </div>
-        </form>
-    </div>
-</main>
+    <main class="container bg-white p-3 rounded">
+        <div style="max-width: 330px;" class="m-auto">
+            <h1>Login</h1>
+            <form action="" method="POST">
+                <div class="mb-3">
+                    <label>Email</label>
+                    <input type="email" name="email" class="form-control" placeholder="email">
+                </div>
+                <div class="mb-3">
+                    <label>Password</label>
+                    <input type="password" name="password" class="form-control" placeholder="password">
+                </div>
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" name="remember" value="1" id="flexCheckDefault">
+                    <label class="form-check-label" for="flexCheckDefault">
+                        Remebmer me
+                    </label>
+                </div>
+                {% if form %}
+                    <div class="text-danger">
+                        {% for field in form %}
+                            {% if field.errors %}
+                                {% for error in field.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                <div class="mb-3">
+                    <button class="btn btn-primary w-100">Sign in</button>
+                </div>
+            </form>
+        </div>
+    </main>
 {% endblock %}
 
