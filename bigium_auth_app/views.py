@@ -1,11 +1,15 @@
 import random
 import string
+
+from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
-from django.shortcuts import render
+from django.shortcuts import render, redirect,reverse
 from django.http import JsonResponse
 from django.core.mail import send_mail
+from django.views.decorators.http import require_http_methods
 from .models import CaptchaModel
+from .forms import RegisterForm
 
 
 # Create your views here.
@@ -13,9 +17,21 @@ def login(request):
     return render(request, 'login.html')
 
 
+@require_http_methods(['GET', 'POST'])
 def register(request):
-    return render(request, 'register.html')
-
+    if request.method == 'GET':
+        return render(request, 'register.html')
+    else:  # POST
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data.get('email')
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            User.objects.create_user(email=email, username=username, password=password)
+            return redirect(reverse('bigium_auth_app:login'))
+        else:
+            print(form.errors)
+            return redirect(reverse("bigium_auth_app:register"))
 
 def send_email_captcha(request):
     if request.method == 'POST':

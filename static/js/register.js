@@ -16,7 +16,7 @@ $(function () {
                     data: {email: email},  // Data to be sent in the request
                     success: function (response) {
 
-                        console.log("Response from server:", response);
+
                     },
                     error: function (xhr, status, error) {
 
