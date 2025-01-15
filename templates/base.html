@@ -40,8 +40,8 @@
             </form>
 
             <div class="text-end" bis_skin_checked="1">
-                <button type="button" class="btn btn-outline-light me-2">Login</button>
-                <button type="button" class="btn btn-warning">Sign-up</button>
+                <a href={% url "bigium_auth_app:login" %} type="button" class="btn btn-outline-light me-2">Login</a>
+                <a href={% url "bigium_auth_app:register" %} type="button" class="btn btn-warning">Sign-up</a>
             </div>
         </div>
     </div>
