@@ -1,0 +1,19 @@
+.scroller-items {
+    white-space: nowrap; /* 確保內容不換行 */
+    scrollbar-width: thin; /* Firefox 滾動條寬度 */
+    scrollbar-color: #d6d6d6 transparent; /* 滾動條顏色 */
+}
+
+.scroller-items::-webkit-scrollbar {
+    height: 6px; /* 滾動條高度 */
+}
+
+.scroller-items::-webkit-scrollbar-thumb {
+    background-color: #ccc; /* 滾動條顏色 */
+    border-radius: 3px; /* 圓角 */
+}
+
+.scroller-items::-webkit-scrollbar-track {
+    background: transparent; /* 滾動條背景 */
+}
+

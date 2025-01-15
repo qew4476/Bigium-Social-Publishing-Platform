@@ -1,23 +1,33 @@
 {% extends 'base.html' %}
 {% block title %}Home Page{% endblock %}
 {% block head %}
-<link rel="stylesheet" href="{% static 'css/base.css' %}">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
+<head>
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <!--    <link rel="stylesheet" href="{% static 'css/index.css' %}">-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
 {% endblock %}
 {% block body %}
 <main class="container bg-white p-3 rounded">
+    <!-- Tag Scroller -->
+    <div class="scroller-items d-flex overflow-auto mb-3">
+        {% for tag in tags %}
+        <button class="btn btn-outline-primary me-2 flex-shrink-0" data-tag-id="{{ tag.id }}">
+            {{ tag.name }}
+        </button>
+        {% endfor %}
+    </div>
+
     <div class="row">
         <!-- 主內容區域 -->
         <div class="col-md-8">
-            <div class="row row-cols-1 row-gap-4">
-                {% for article in articles %}
+            <div class="row row-cols-1 row-gap-4" id="article-list">
+                {% for article in page_obj %}
                 <div class="col">
                     <a href="{% url 'blog_app:article_detail' article_id=article.id %}"
                        class="text-decoration-none text-dark">
                         <div class="card" style="height: 200px;">
                             <div class="card-body d-flex align-items-start">
-                                <!-- 文字內容區域 -->
                                 <div class="flex-grow-1 me-3 overflow-hidden">
                                     <h5 class="card-title text-truncate">
                                         <strong>{{ article.title }}</strong>
@@ -26,24 +36,24 @@
                                         {{ article.summary }}
                                     </p>
                                 </div>
-                                <!-- 圖片預覽 -->
                                 {% if article.image %}
                                 <img src="{{ article.image.url }}" class="rounded" alt="Article Preview"
                                      style="width: 280px; height: auto;">
                                 {% endif %}
                             </div>
                             <div class="card-footer text-body-secondary d-flex justify-content-between align-items-center">
-                                <!-- 作者資訊 -->
                                 <div class="d-flex align-items-center">
                                     <img src="{% static 'image/avatar.png' %}" class="rounded-circle me-2" width="30"
                                          height="30" alt="">
                                     {{ article.author }}
                                 </div>
-                                <!-- 標籤與時間 -->
                                 <div class="d-flex align-items-center">
-                                                <span class="badge bg-primary me-2">
-                <i class="fas fa-tag me-1"></i> Primary
-            </span>
+                        <span class="badge bg-primary me-2">
+                            <i class="fas fa-tag me-1"></i>
+                            {% for tag in article.tags.all %}
+                            {{ tag.name }}{% if not forloop.last %}, {% endif %}
+                            {% endfor %}
+                        </span>
                                     <div>{{ article.created_at|date:"M d, Y" }}</div>
                                 </div>
                             </div>
@@ -51,8 +61,29 @@
                     </a>
                 </div>
                 {% endfor %}
-
             </div>
+
+            <!-- 分頁控制器 -->
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                    </li>
+                    {% endif %}
+                    {% for num in page_obj.paginator.page_range %}
+                    <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                    </li>
+                    {% endfor %}
+                    {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+
         </div>
 
         <!-- 側邊欄 -->
@@ -77,3 +108,65 @@
     </div>
 </main>
 {% endblock %}
+<script>
+    let page = 1;
+    const articleList = document.getElementById('article-list');
+    const observer = new IntersectionObserver(entries => {
+        if (entries[0].isIntersecting) {
+            loadMoreArticles();
+        }
+    });
+
+    function loadMoreArticles() {
+        page++;
+        fetch(`?page=${page}`)
+            .then(response => response.text())
+            .then(html => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const newArticles = doc.querySelectorAll('#article-list .col');
+                newArticles.forEach(article => articleList.appendChild(article));
+                if (!doc.querySelector('.pagination .page-item.active + .page-item')) {
+                    observer.disconnect();  // 停止監聽
+                }
+            })
+            .catch(err => console.error('Error loading articles:', err));
+    }
+
+    // 監聽滾動到底部
+    observer.observe(document.querySelector('.pagination'));
+
+    // 綁定標籤按鈕的點擊事件
+document.addEventListener('DOMContentLoaded', function() {
+    // 綁定標籤按鈕的點擊事件
+    document.querySelectorAll('.scroller-items .btn').forEach(tagButton => {
+        tagButton.addEventListener('click', () => {
+            const tagId = tagButton.dataset.tagId; // 獲取標籤 ID
+            fetchArticlesByTag(tagId); // 調用過濾函數
+        });
+    });
+
+    // 過濾文章的函數
+    function fetchArticlesByTag(tagId) {
+        fetch(`?tag=${tagId}`)
+            .then(response => response.text())
+            .then(html => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const newArticles = doc.querySelector('#article-list').innerHTML;
+                document.getElementById('article-list').innerHTML = newArticles;
+
+                // 如果有分頁功能，重新綁定 observer
+                const pagination = doc.querySelector('.pagination');
+                if (pagination) {
+                    observer.observe(pagination);
+                }
+            })
+            .catch(err => console.error('Error fetching articles:', err));
+    }
+});
+
+
+
+
+</script>

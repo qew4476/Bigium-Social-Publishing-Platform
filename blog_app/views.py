@@ -1,17 +1,32 @@
 import re
 
 import markdown
+from django.core.paginator import Paginator
+from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
+from django.template.loader import render_to_string
 
-from .models import Article
+from .models import Article, Tag
 
 
 # Create your views here.
 def index(request):
-    articles = Article.objects.all()  # 獲取所有文章
+    tag_id = request.GET.get('tag')  # 獲取標籤 ID
+    articles = Article.objects.all().order_by('-created_at')
 
-    return render(request, template_name="index.html", context={'articles': articles})
+    if tag_id:
+        articles = articles.filter(tags__id=tag_id)  # 過濾包含該標籤的文章
 
+    tags = Tag.objects.all()
+    paginator = Paginator(articles, 5)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        html = render_to_string('partials/article_list.html', {'page_obj': page_obj})
+        return JsonResponse({'html': html})
+
+    return render(request, 'index.html', {'page_obj': page_obj, 'tags': tags})
 
 def article_content(request):
     return render(request, template_name="article_content.html")
@@ -45,17 +60,22 @@ def article_detail(request, article_id):
 
 def edit_article(request, article_id):
     article = get_object_or_404(Article, id=article_id)
+    tags = Tag.objects.all()  # 獲取所有標籤
 
     if request.method == "POST":
         # 從表單中獲取數據
         title = request.POST.get("title")
         content = request.POST.get("content")
+        selected_tags = request.POST.getlist("tags")  # 獲取選中的標籤
 
         # 更新文章內容
         article.title = title
         article.content = content
         article.save()
 
+        # 更新文章的標籤
+        article.tags.set(selected_tags)  # 更新標籤
+
         return redirect('blog_app:article_detail', article_id=article.id)
 
-    return render(request, 'edit_article.html', {'article': article})
+    return render(request, 'edit_article.html', {'article': article, 'tags': tags})
