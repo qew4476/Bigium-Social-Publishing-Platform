@@ -1,10 +1,10 @@
 from distutils.command.clean import clean
+from os.path import exists
 
 from django import forms
-from django.contrib.auth import get_user_model
+from django.contrib.auth.models import User
 from .models import CaptchaModel
 
-User = get_user_model()
 
 class RegisterForm(forms.Form):
     username = forms.CharField(max_length=20, min_length=2, error_messages={
@@ -15,8 +15,8 @@ class RegisterForm(forms.Form):
     email = forms.EmailField(error_messages={"required": "Please input your email",
                                              'invalid': "Please input your email address in the format."})
     captcha = forms.CharField(max_length=4, min_length=4, error_messages={
-        "max_length":"Please input 4 digits",
-        "min_length":"Please input 4 digits"
+        "max_length": "Please input 4 digits",
+        "min_length": "Please input 4 digits"
     })
     password = forms.CharField(max_length=20, min_length=6, error_messages={
         'required:': "Please input your password",
@@ -37,8 +37,15 @@ class RegisterForm(forms.Form):
         captcha = self.cleaned_data.get('captcha')
         email = self.cleaned_data.get('email')
 
-        captcha_model = CaptchaModel.objects.filter(email=email,captcha=captcha).first()
+        captcha_model = CaptchaModel.objects.filter(email=email, captcha=captcha).first()
         if not captcha_model:
             raise forms.ValidationError("The captcha is wrong!")
-        captcha_model.delete()  #Verify successfully, it can be deleted
+        captcha_model.delete()  # Verify successfully, it can be deleted
         return captcha
+
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        exists = User.objects.filter(username=username).exists()
+        if exists:
+            raise forms.ValidationError("The username is already registered")
+        return username
