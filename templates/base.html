@@ -39,10 +39,19 @@
                        aria-label="Search">
             </form>
 
-            <div class="text-end" bis_skin_checked="1">
-                <a href={% url "bigium_auth_app:login" %} type="button" class="btn btn-outline-light me-2">Login</a>
-                <a href={% url "bigium_auth_app:register" %} type="button" class="btn btn-warning">Sign-up</a>
-            </div>
+            {% if user.is_authenticated %}
+                <div class="text-end" bis_skin_checked="1">
+
+                    <a href="{% url "bigium_auth_app:logout" %}" type="button" class="btn btn-outline-light me-2">Sign-out</a>
+                </div>
+            {% else %}
+                <div class="text-end" bis_skin_checked="1">
+                    <a href={% url "bigium_auth_app:login" %} type="button" class="btn btn-outline-light me-2">Login</a>
+                    <a href={% url "bigium_auth_app:register" %} type="button" class="btn btn-warning">Sign-up</a>
+                </div>
+            {% endif %}
+
+
         </div>
     </div>
 </header>

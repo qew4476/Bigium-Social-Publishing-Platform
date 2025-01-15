@@ -2,7 +2,7 @@ import random
 import string
 
 from django.contrib.auth.models import User
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 from django.shortcuts import render, redirect, reverse
@@ -14,7 +14,7 @@ from .forms import RegisterForm, LoginForm
 
 
 @require_http_methods(['GET', 'POST'])
-def login_form(request):
+def my_login(request):
     """The login Page(html) and the login action"""
     if request.method == 'GET':
         return render(request, 'login.html')
@@ -80,3 +80,7 @@ def send_email_captcha(request):
         # Create a new captcha if not exists, but update if there have been one captcha already.
         CaptchaModel.objects.update_or_create(email=email, defaults={'captcha': captcha})
         return JsonResponse({"msg": "Captcha has been sent successfully."}, status=200)
+
+def my_logout(request):
+    logout(request)
+    return redirect(reverse("bigium_app:index"))
