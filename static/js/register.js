@@ -11,15 +11,15 @@ $(function () {
 
                 // ajax
                 $.ajax({
-                    url: '/auth/send_email_captcha/',  // 目标 URL
-                    type: 'POST',  // 请求类型
-                    data: { email: email },  // Data to be sent in the request
+                    url: '/auth/send_email_captcha/',
+                    type: 'POST',
+                    data: {email: email},  // Data to be sent in the request
                     success: function (response) {
-                        // 请求成功时的回调函数
+
                         console.log("Response from server:", response);
                     },
                     error: function (xhr, status, error) {
-                        // 请求失败时的回调函数
+
                         console.error("Request failed:", error);
                     }
                 });
