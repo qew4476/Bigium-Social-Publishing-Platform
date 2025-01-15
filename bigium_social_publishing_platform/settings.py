@@ -10,9 +10,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 import os
+from email.policy import default
 from pathlib import Path
 from dotenv import load_dotenv
 from decouple import config
+from psycopg2.sql import DEFAULT
 
 load_dotenv()
 
@@ -82,15 +84,14 @@ WSGI_APPLICATION = 'bigium_social_publishing_platform.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        "NAME": os.getenv("db_NAME"),
-        "USER": os.getenv("db_USER"),
-        "PASSWORD": os.getenv("db_PASSWORD"),
-        "HOST": os.getenv("db_HOST"),
-        "PORT": os.getenv("db_PORT"),
+        "NAME": config("DB_NAME",default=None),
+        "USER": os.getenv("DB_USER"),
+        "PASSWORD": os.getenv("DB_PASSWORD"),
+        "HOST": os.getenv("DB_HOST"),
+        "PORT": os.getenv("DB_PORT"),
 
     }
 }
-
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
@@ -142,3 +143,4 @@ EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", cast=str, default=None)
 EMAIL_USE_TLS = config("EMAIL_USE_TLS", cast=bool, default=True)  # Use EMAIL_PORT 587 for TLS
 EMAIL_USE_SSL = config("EMAIL_USE_SSL", cast=bool, default=False)  # Use MAIL_PORT 465 for SSL
 DEFAULT_FROM_EMAIL = config("EMAIL_HOST_USER", cast=str, default=None)
+
