@@ -31,7 +31,7 @@ def register(request):
             return redirect(reverse('bigium_auth_app:login'))
         else:
             print(form.errors)
-            return redirect(reverse("bigium_auth_app:register"))
+            return render(request,'register.html',{'form':form})
 
 def send_email_captcha(request):
     if request.method == 'POST':

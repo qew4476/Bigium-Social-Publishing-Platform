@@ -14,7 +14,10 @@ class RegisterForm(forms.Form):
     })
     email = forms.EmailField(error_messages={"required": "Please input your email",
                                              'invalid': "Please input your email address in the format."})
-    captcha = forms.CharField(max_length=4, min_length=4)
+    captcha = forms.CharField(max_length=4, min_length=4, error_messages={
+        "max_length":"Please input 4 digits",
+        "min_length":"Please input 4 digits"
+    })
     password = forms.CharField(max_length=20, min_length=6, error_messages={
         'required:': "Please input your password",
         'max_length': "Your password must be between 6 and 20 characters in length.",
