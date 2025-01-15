@@ -32,8 +32,8 @@ def send_email_captcha(request):
         # send the captcha to the email
         captcha = "".join(
             random.sample(string.digits, 4))  # Sampling will get:['2','3','4','8'], so it needs to be joined
-        # send_mail("Bigium: Captcha Verification Code", f"Your captcha:{captcha}", recipient_list=[email],
-        #           from_email=None)  # Default from_email has been set up
+        send_mail("Bigium: Captcha Verification Code", f"Your captcha:{captcha}", recipient_list=[email],
+                  from_email=None)  # Default from_email has been set up
         # Create a new captcha if not exists, but update if there have been one captcha already.
         CaptchaModel.objects.update_or_create(email=email, defaults={'captcha': captcha})
         return JsonResponse({"msg": "Captcha has been sent successfully."}, status=200)
