@@ -2,7 +2,6 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
 from django.views.decorators.http import require_http_methods
-from unicodedata import category
 from django.http.response import JsonResponse
 
 from .models import ArticleCategory,Article
