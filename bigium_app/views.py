@@ -32,11 +32,13 @@ def write_article(request):
             title = form.cleaned_data.get("title")
             content = form.cleaned_data.get("content")
             category_id = form.cleaned_data.get("category")
-            Article.objects.create(title=title,content=content,category=category_id, author_id=request.user )
+            Article.objects.create(title=title,content=content,category_id=category_id, author_id=request.user.id )
             return JsonResponse({"code":200, "message":"Published Article successfully."})
         else:
             print(form.errors)
             return JsonResponse({"code":400, "message": "Form failed!"})
+
+
 
 
 

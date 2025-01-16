@@ -8,7 +8,7 @@ class ArticleCategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Article)
 class ArticleAdmin(admin.ModelAdmin):
-    list_display = ['title','content','publish_time', 'category_id', 'author']
+    list_display = ['title','content','publish_time', 'category', 'author']
 
 @admin.register(ArticleComment)
 class ArticleCommentAdmin(admin.ModelAdmin):
