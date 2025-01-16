@@ -17,7 +17,7 @@ def index(request):
     return render(request, template_name="index.html")
 
 
-def article_content(request):
+def article_content(request, article_id):
     return render(request, template_name="article_content.html")
 
 @require_http_methods(['GET', 'POST'])
@@ -32,8 +32,8 @@ def write_article(request):
             title = form.cleaned_data.get("title")
             content = form.cleaned_data.get("content")
             category_id = form.cleaned_data.get("category")
-            Article.objects.create(title=title,content=content,category_id=category_id, author_id=request.user.id )
-            return JsonResponse({"code":200, "message":"Published Article successfully."})
+            article = Article.objects.create(title=title,content=content,category_id=category_id, author_id=request.user.id )
+            return JsonResponse({"code":200, "message":"Published Article successfully.","data":{"article_id":article.id}})
         else:
             print(form.errors)
             return JsonResponse({"code":400, "message": "Form failed!"})

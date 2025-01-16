@@ -12,11 +12,12 @@ window.onload = function (){
                 content: content
             },
             success:function (result){
-                if (result["code"] === 200){
-                    console.log(result);
-                }else {
-                    console.log("error",result);
-                    console.log(title)
+                if(result['code'] === 200){
+                    let article_id = result['data']['article_id'];
+                    console.log(article_id);
+                    window.location = "/article/" + article_id;
+                }else{
+                    alert(result['message']);
                 }
             }
 

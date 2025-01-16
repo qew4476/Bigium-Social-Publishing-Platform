@@ -3,5 +3,5 @@ from . import views
 
 app_name = "bigium_app" # build for pages and article management
 urlpatterns = [path('', views.index, name="index"),
-               path('article/', views.article_content, name="article_content"),
+               path('article/<int:article_id>', views.article_content, name="article_content"),
                path('write/', views.write_article,name="write_article")]
