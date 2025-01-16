@@ -20,9 +20,9 @@
                 <div class="mb-3">
                     <label class="form-label">Category</label>
                     <select name="category" class="form-select">
-                        <option value="1">Python</option>
-                        <option value="2">Frontend</option>
-                        <option value="3">Backend</option>
+                        {% for category in categories %}
+                            <option value="{{ category.id }}">{{ category.category }}</option>
+                        {% endfor %}
                     </select>
                 </div>
                 <div class="mb-3">

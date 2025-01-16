@@ -36,10 +36,9 @@ def my_login(request):
                     request.session.set_expiry(0)
                 return redirect('/')  # to home page
             else:
-                form.add_error('email', 'Email or password error!')
+                form.add_error('email', 'password error!')
                 return render(request, "login.html", context={"form": form})
         else:
-            form.add_error('email', 'Email or password error!')
             return render(request, "login.html", context={"form": form})
 
 

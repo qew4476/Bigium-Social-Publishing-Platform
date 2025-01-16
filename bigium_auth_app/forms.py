@@ -52,12 +52,12 @@ class RegisterForm(forms.Form):
 
 
 class LoginForm(forms.Form):
-    email = forms.EmailField(error_messages={"required": "Please input your email",
-                                             'invalid': "Please input your email address in the format."})
+    email = forms.EmailField(error_messages={"required": "Please input your email"
+                                             ,"invalid":"Email incorrect!"})
     password = forms.CharField(max_length=20, min_length=6, error_messages={
         'required:': "Please input your password",
         'max_length': "Your password must be between 6 and 20 characters in length.",
-        'min_length': "Your password must be between 6 and 20 characters in length."
+        'min_length': "Your password must be between 6 and 20 characters in length.",
 
     })
     remember = forms.IntegerField(required=False)
