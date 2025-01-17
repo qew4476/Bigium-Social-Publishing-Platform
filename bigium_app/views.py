@@ -1,10 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect,reverse
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
-from django.views.decorators.http import require_http_methods
+from django.views.decorators.http import require_http_methods,require_POST
 from django.http.response import JsonResponse
 
-from .models import ArticleCategory,Article
+from .models import ArticleCategory,Article,ArticleComment
 from .forms import PublishArticleForm
 
 
@@ -42,7 +42,16 @@ def write_article(request):
             print(form.errors)
             return JsonResponse({"code":400, "message": "Form failed!"})
 
-
-
+@require_POST
+@login_required(login_url=reverse_lazy("bigium_auth_app:login"))
+def write_comment(request):
+    article_id = request.POST.get("article_id")   # get the article to be reviewed
+    comment = request.POST.get("comment")
+    article = Article.objects.get(pk=article_id)
+    ArticleComment.objects.create(comment=comment, article_id=article, author=request.user)
+    #reload
+    print(article)
+    print(request.user)
+    return redirect(reverse("bigium_app:article_content", kwargs={"article_id":article_id}))
 
 
