@@ -50,8 +50,6 @@ def write_comment(request):
     article = Article.objects.get(pk=article_id)
     ArticleComment.objects.create(comment=comment, article_id=article, author=request.user)
     #reload
-    print(article)
-    print(request.user)
     return redirect(reverse("bigium_app:article_content", kwargs={"article_id":article_id}))
 
 

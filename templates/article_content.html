@@ -19,7 +19,7 @@
         </div>
         <hr>
         <div class="mt-2">
-            <h3>Review（10）</h3>
+            <h3>{{ article.comments | length}}</h3>
             <form action="{% url "bigium_app:write_comment" %}" method="POST">
                 <input type="hidden" name="article_id" value="{{ article.id }}">
                 <div class="mt-2">
@@ -32,24 +32,17 @@
         </div>
         <div class="mt-2">
             <ul class="list-group list-group-flush">
+                {% for comment in article.comments.all %}
                 <li class="list-group-item mb-3">
                     <div class="d-flex justify-content-between text-body-secondary">
                         <div class="user-info">
-                            <span class="ms-2">Reviewer</span>
+                            <span class="ms-2">{{ comment.author.username }}</span>
                         </div>
-                        <div class="create-time" style="line-height: 40px;">2025-01-13 14:45</div>
+                        <div class="create-time" style="line-height: 40px;">{{ comment.publish_time | date:"Y-m-d h:i" }}</div>
                     </div>
-                    <div class="mt-2">Review Content</div>
+                    <div class="mt-2">{{ comment.comment }}</div>
                 </li>
-                <li class="list-group-item">
-                    <div class="d-flex justify-content-between text-body-secondary">
-                        <div class="user-info">
-                            <span class="ms-2">Reviewer</span>
-                        </div>
-                        <div class="create-time" style="line-height: 40px;">2025-01-13 14:45</div>
-                    </div>
-                    <div class="mt-2">Review Content</div>
-                </li>
+                {% endfor %}
             </ul>
         </div>
     </main>
