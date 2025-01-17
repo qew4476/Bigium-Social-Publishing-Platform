@@ -15,18 +15,18 @@ It allows users to publish articles and share their thoughts with others.
 * Frontend: HTML, CSS, JavaScript, JQuery
 
 ## Display
-#### Login/Register(send captcha to verify)
+* Login/Register(send captcha to verify)
 <img src="static/image/register.png" alt="img.png" width="300">
 <img src="static/image/signin.png" alt="img.png" width="300">
 
-#### HomePage
+* HomePage
 <img src="static/image/index.png">
 
-#### WriteArticle
+* WriteArticle
 <img src="static/image/write.png">
 
-#### ArtiecleContent
+* ArtiecleContent
 <img src="static/image/article.png">
 
-#### Review
+* Review
 <img src="static/image/review.png">
