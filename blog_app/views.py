@@ -21,12 +21,13 @@ def index(request):
     paginator = Paginator(articles, 5)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
+    max_page = paginator.num_pages
 
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
         html = render_to_string('partials/article_list.html', {'page_obj': page_obj})
         return JsonResponse({'html': html})
 
-    return render(request, 'index.html', {'page_obj': page_obj, 'tags': tags})
+    return render(request, 'index.html', {'page_obj': page_obj, 'tags': tags, 'max_page': max_page})
 
 def article_content(request):
     return render(request, template_name="article_content.html")

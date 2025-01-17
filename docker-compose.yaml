@@ -1,23 +1,30 @@
-version: '3.9'
+version: '3.8'
 
 services:
-  postgres:
-    image: postgres:15
-    container_name: postgres_db
+  db:
+    image: postgres:14.1-alpine
     restart: always
     environment:
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: root
-      POSTGRES_DB: your_database
+      - POSTGRES_USER=jed
+      - POSTGRES_PASSWORD=46sKSD456ASVLdasd!dsfj%4
+      - POSTGRES_DB=blog
     ports:
-      - "5432:5432"
+      - '5432:5432'
+
+  web:
+    build:
+      context: .
+      args:
+        STAGE: ${STAGE:-dev}  # 默認為 dev，如果未指定 STAGE
+    container_name: DjangoBlog
+    environment:
+      - STAGE=${STAGE:-dev}  # 傳遞 STAGE 給容器內部
+      - PYTHONUNBUFFERED= 1
+
+    command: python manage.py runserver 0.0.0.0:8000
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-    networks:
-      - postgres_network
-
-volumes:
-  postgres_data:
-
-networks:
-  postgres_network:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db

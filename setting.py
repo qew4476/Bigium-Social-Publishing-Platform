@@ -1,4 +1,7 @@
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
+import os
+
+STAGE = os.getenv('STAGE')
 
 
 class Settings(BaseSettings):
@@ -7,15 +10,13 @@ class Settings(BaseSettings):
     BLOG_POSTGRESQL_PORT: int = 5432
     BLOG_POSTGRESQL_PASSWORD: str
     BLOG_POSTGRESQL_DATABASE: str
-
-    class Config:
-        env_file = '.env'
-
+    STAGE: str
+    model_config = SettingsConfigDict(env_file=f'{STAGE}.config.env', env_file_encoding='utf-8')
 
 
 def get_postgresql_setting():
     SETTINGS = Settings()
-
+    print(SETTINGS)
     return {
         "default": {
             "ENGINE": "django.db.backends.postgresql",

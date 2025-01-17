@@ -3,20 +3,32 @@
 {% block head %}
 <head>
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
-    <!--    <link rel="stylesheet" href="{% static 'css/index.css' %}">-->
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 {% endblock %}
 {% block body %}
 <main class="container bg-white p-3 rounded">
     <!-- Tag Scroller -->
-    <div class="scroller-items d-flex overflow-auto mb-3">
-        {% for tag in tags %}
-        <button class="btn btn-outline-primary me-2 flex-shrink-0" data-tag-id="{{ tag.id }}">
-            {{ tag.name }}
+    <div class="d-flex align-items-center mb-3">
+        <!-- 左側按鈕 -->
+        <button id="scroll-left" class="btn btn-outline-secondary me-2">
+            <i class="fas fa-chevron-left"></i>
         </button>
-        {% endfor %}
+        <!-- 滾動內容 -->
+        <div class="scroller-items d-flex overflow-auto flex-nowrap">
+            {% for tag in tags %}
+            <button class="btn btn-outline-primary me-2 flex-shrink-0" data-tag-id="{{ tag.id }}">
+                {{ tag.name }}
+            </button>
+            {% endfor %}
+        </div>
+        <!-- 右側按鈕 -->
+        <button id="scroll-right" class="btn btn-outline-secondary ms-2">
+            <i class="fas fa-chevron-right"></i>
+        </button>
     </div>
+
 
     <div class="row">
         <!-- 主內容區域 -->
@@ -62,28 +74,6 @@
                 </div>
                 {% endfor %}
             </div>
-
-            <!-- 分頁控制器 -->
-            <nav aria-label="Page navigation">
-                <ul class="pagination justify-content-center">
-                    {% if page_obj.has_previous %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
-                    </li>
-                    {% endif %}
-                    {% for num in page_obj.paginator.page_range %}
-                    <li class="page-item {% if page_obj.number == num %}active{% endif %}">
-                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
-                    </li>
-                    {% endfor %}
-                    {% if page_obj.has_next %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
-                    </li>
-                    {% endif %}
-                </ul>
-            </nav>
-
         </div>
 
         <!-- 側邊欄 -->
@@ -106,67 +96,121 @@
             </div>
         </aside>
     </div>
+    <div id="max-page" style="display: none;" data-max-page="{{ max_page }}"></div>
+
 </main>
-{% endblock %}
 <script>
-    let page = 1;
-    const articleList = document.getElementById('article-list');
-    const observer = new IntersectionObserver(entries => {
-        if (entries[0].isIntersecting) {
-            loadMoreArticles();
+    document.addEventListener('DOMContentLoaded', function () {
+        console.log("Script Loaded"); // 確保腳本載入成功
+
+        // 滾動按鈕的 DOM 元素
+        const scroller = document.querySelector('.scroller-items');
+        const scrollLeftButton = document.getElementById('scroll-left');
+        const scrollRightButton = document.getElementById('scroll-right');
+
+        // 確保元素正確選取
+        if (!scroller || !scrollLeftButton || !scrollRightButton) {
+            console.error("Missing DOM elements"); // 確保元素正確選取
+            return;
         }
-    });
 
-    function loadMoreArticles() {
-        page++;
-        fetch(`?page=${page}`)
-            .then(response => response.text())
-            .then(html => {
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(html, 'text/html');
-                const newArticles = doc.querySelectorAll('#article-list .col');
-                newArticles.forEach(article => articleList.appendChild(article));
-                if (!doc.querySelector('.pagination .page-item.active + .page-item')) {
-                    observer.disconnect();  // 停止監聽
-                }
-            })
-            .catch(err => console.error('Error loading articles:', err));
-    }
+        const scrollAmount = 600; // 每次滾動的像素值
 
-    // 監聽滾動到底部
-    observer.observe(document.querySelector('.pagination'));
-
-    // 綁定標籤按鈕的點擊事件
-document.addEventListener('DOMContentLoaded', function() {
-    // 綁定標籤按鈕的點擊事件
-    document.querySelectorAll('.scroller-items .btn').forEach(tagButton => {
-        tagButton.addEventListener('click', () => {
-            const tagId = tagButton.dataset.tagId; // 獲取標籤 ID
-            fetchArticlesByTag(tagId); // 調用過濾函數
+        // 綁定滾動按鈕事件
+        scrollLeftButton.addEventListener('click', () => {
+            console.log("Left Button Clicked"); // 測試事件綁定
+            scroller.scrollBy({
+                left: -scrollAmount,
+                behavior: 'smooth',
+            });
         });
+
+        scrollRightButton.addEventListener('click', () => {
+            console.log("Right Button Clicked");
+            scroller.scrollLeft += 600;  // 直接調整 scrollLeft 來實現滾動
+        });
+
+
+
+        // 綁定標籤按鈕的點擊事件
+        document.querySelectorAll('.scroller-items .btn').forEach(tagButton => {
+            tagButton.addEventListener('click', () => {
+                const tagId = tagButton.dataset.tagId; // 獲取標籤 ID
+                fetchArticlesByTag(tagId); // 調用過濾函數
+            });
+        });
+
+        // 過濾文章的函數
+        function fetchArticlesByTag(tagId) {
+            fetch(`?tag=${tagId}`)
+                .then(response => response.text())
+                .then(html => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    const newArticles = doc.querySelector('#article-list').innerHTML;
+                    document.getElementById('article-list').innerHTML = newArticles;
+
+                    // 如果有分頁功能，重新綁定 observer
+                    const pagination = doc.querySelector('.pagination');
+                    if (pagination) {
+                        observer.observe(pagination);
+                    }
+                })
+                .catch(err => console.error('Error fetching articles:', err));
+        }
+
+
+        let page = 1; // 起始頁面
+        const articleList = document.getElementById('article-list');
+let isLoading = false; // 確保只有在加載完成後才能再加載
+
+        // 監聽滾動事件
+        const observer = new IntersectionObserver(entries => {
+            if (entries[0].isIntersecting && !isLoading) {
+                loadMoreArticles();
+            }
+        }, { threshold: 1.0 });
+
+        // 觀察頁面底部
+        observer.observe(document.querySelector('#article-list .col:last-child'));
+
+        // 加載更多文章
+        function loadMoreArticles() {
+            isLoading = true; // 設置為正在加載
+            const maxPage = document.getElementById('max-page').dataset.maxPage; // 取得最大頁數
+            if (page >= maxPage) {
+                observer.disconnect(); // 如果當前頁數達到最大頁數，停止加載
+                return;
+            }
+
+            page++;
+            fetch(`?page=${page}`)
+                .then(response => response.text())
+                .then(html => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    const newArticles = doc.querySelectorAll('#article-list .col');
+                    newArticles.forEach(article => articleList.appendChild(article));
+
+                    // 檢查是否有更多文章
+                    if (newArticles.length === 0) {
+                        observer.disconnect(); // 停止監聽
+                    }
+
+                    isLoading = false; // 加載完成
+                })
+                .catch(err => {
+                    console.error('Error loading articles:', err);
+                    isLoading = false;
+                });
+        }
+
     });
-
-    // 過濾文章的函數
-    function fetchArticlesByTag(tagId) {
-        fetch(`?tag=${tagId}`)
-            .then(response => response.text())
-            .then(html => {
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(html, 'text/html');
-                const newArticles = doc.querySelector('#article-list').innerHTML;
-                document.getElementById('article-list').innerHTML = newArticles;
-
-                // 如果有分頁功能，重新綁定 observer
-                const pagination = doc.querySelector('.pagination');
-                if (pagination) {
-                    observer.observe(pagination);
-                }
-            })
-            .catch(err => console.error('Error fetching articles:', err));
-    }
-});
-
-
-
 
 </script>
+
+
+<style>
+
+</style>
+{% endblock %}
