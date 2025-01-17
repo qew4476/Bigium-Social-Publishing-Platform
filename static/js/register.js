@@ -4,7 +4,7 @@ $(function () {
             let $this = $(this);
             let email = $("input[name='email']").val();
             if (!email) {
-                alert("ssss");
+                alert("Email format is incorrect");
             } else {
                 // disable the button
                 $this.off('click');
