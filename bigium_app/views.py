@@ -18,7 +18,11 @@ def index(request):
 
 
 def article_content(request, article_id):
-    return render(request, template_name="article_content.html")
+    try:
+        article = Article.objects.get(pk=article_id)
+    except Exception as e:
+        article = None
+    return render(request, template_name="article_content.html", context={'article': article})
 
 @require_http_methods(['GET', 'POST'])
 @login_required(login_url=reverse_lazy("bigium_auth_app:login"))
