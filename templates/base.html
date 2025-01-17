@@ -34,8 +34,8 @@
                 <li><a href="{% url "bigium_app:write_article" %}" class="nav-link px-2 text-white">Write</a></li>
             </ul>
 
-            <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
-                <input type="search" class="form-control form-control-dark text-bg-dark" placeholder="Search..."
+            <form action = "{% url "bigium_app:search_article" %}" method="GET" class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
+                <input name = "keyword" type="search" class="form-control form-control-dark text-bg-dark" placeholder="Search..."
                        aria-label="Search">
             </form>
 

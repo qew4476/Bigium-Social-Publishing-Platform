@@ -1,11 +1,13 @@
 from django.shortcuts import render, redirect,reverse
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
-from django.views.decorators.http import require_http_methods,require_POST
+from django.views.decorators.http import require_http_methods,require_POST,require_GET
 from django.http.response import JsonResponse
+from django.db.models import Q
 
 from .models import ArticleCategory,Article,ArticleComment
 from .forms import PublishArticleForm
+
 
 
 # reverse_lazy: It is useful for when you need to use a URL reversal before your project’s URLConf is loaded.
@@ -14,7 +16,8 @@ from .forms import PublishArticleForm
 
 # Create your views here.
 def index(request):
-    return render(request, template_name="index.html")
+    articles = Article.objects.all()
+    return render(request, template_name="index.html",context={"articles":articles})
 
 
 def article_content(request, article_id):
@@ -52,4 +55,11 @@ def write_comment(request):
     #reload
     return redirect(reverse("bigium_app:article_content", kwargs={"article_id":article_id}))
 
+@require_GET
+def search_article(request):
+    # /search?keyword=xxx
+    keyword = request.GET.get("keyword")
+    #search from the title and the content
+    articles = Article.objects.filter(Q(title__icontains=keyword) | Q(content__icontains=keyword)).all()
+    return render(request, template_name="index.html", context={"articles":articles})
 

@@ -8,22 +8,24 @@
 <main class="container bg-white p-3 rounded">
     <h1>Article List</h1>
     <div class="row row-cols-1 row-gap-4">
+        {% for article in articles %}
         <div class="col">
             <div class="card">
                 <div class="card-header">
-                    <a href="#">Article Title</a>
+                    <a href="{% url 'bigium_app:article_content' article_id=article.id %}">{{ article.title }}</a>
                 </div>
                 <div class="card-body" style="height: 100px;">
-                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                    <p class="card-text">{{ article.content |striptags| truncatechars:200 }}</p>
                 </div>
                 <div class="card-footer text-body-secondary d-flex justify-content-between">
                     <div>
-                        Author
+                        {{ article.author }}
                     </div>
-                    <div>Mar 21, 2023</div>
+                    <div>{{ article.publish_time | date:"Y-m-d h:i" }}</div>
                 </div>
             </div>
         </div>
+        {% endfor %}
 
     </div>
 </main>

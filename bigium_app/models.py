@@ -18,6 +18,9 @@ class Article(models.Model):
     def __str__(self):
         return self.title
 
+    class Meta:
+        ordering = ['-publish_time']
+
 class ArticleComment(models.Model):
     """Comment to the specific article(foreign key)"""
     comment = models.TextField()
@@ -27,3 +30,6 @@ class ArticleComment(models.Model):
 
     def __str__(self):
         return self.comment
+
+    class Meta:
+        ordering = ['-publish_time']
