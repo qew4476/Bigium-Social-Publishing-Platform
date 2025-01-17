@@ -19,10 +19,10 @@ It allows users to publish articles and share their thoughts with others.
 <img src="static/image/register.png" alt="img.png" width="300">
 <img src="static/image/signin.png" alt="img.png" width="300">
 * HomePage
-![img.png](static/image/index.png)
+<img src="static/image/index.png">
 * WriteArticle
-![img.png](static/image/write.png)
+<img src="static/image/write.png">
 * ArtiecleContent
-![img.png](static/image/article.png)
+<img src="static/image/article.png">
 * Review
-![img.png](static/image/review.png)
+<img src="static/image/review.png">
