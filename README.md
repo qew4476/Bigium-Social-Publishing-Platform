@@ -13,6 +13,7 @@ It allows users to publish articles and share their thoughts with others.
 ## Tech Stacks
 * Backend: Django, PostgreSQL 
 * Frontend: HTML, CSS, JavaScript, JQuery
+* Tools: Git, Docker
 
 ## Display
 * Login/Register(send captcha to verify)
